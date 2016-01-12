@@ -1,3 +1,11 @@
+/*
+ * Ejercicio 1, uso de Malloc y realloc
+ *
+ * Owner: Daniel Monzalvo
+ * Matricula: A01021514
+ * Mail: danielmonr@gmail.com
+ */
+
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -25,6 +33,8 @@ int n = 0;
 int main(){
 	printf("Ejercicio en de lostado de personas.\n");
 	printf("Daniel Monzalvo, A01021514\n\n");
+	// Manual
+	printf("Manual del usuario:\nEscribir un numero del 1 al 6 para seleccionar una opcion del menu, cualquier otro numero para salir.\nLas edades deben ser enteros, los nombre y apellidos deben de tener una longitud maxima de 10 caracteres.\n\n");
 
 	// Definir arreglo de funciones
 	funciones funcion[6];
