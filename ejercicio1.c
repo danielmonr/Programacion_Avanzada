@@ -53,22 +53,22 @@ int main(){
 		scanf("%d",&r);
 		if(r > 0 && r < 7)
 			funcion[r-1]();
-		else
+		else{
+			free(lista);
 			exit(0);
+		}
 	}
+
+	free(lista);
+	n = 0;
 
 }
 
 void crear(){
 	printf("\n----------------Crear----------------------\n");
-	if (n == 0){
-		lista = (p*) malloc (sizeof(p));
-		n++;
-	}
-	else{
-		lista = (p*) realloc(lista, sizeof(p)*n);
-		n++;
-	}
+	n++;
+	lista = (p*) realloc(lista, n * sizeof(p));
+
 	printf("Nombre: ");
 	scanf("%s",(lista+n-1)->nombre);
 	printf("Apellido paterno: ");
