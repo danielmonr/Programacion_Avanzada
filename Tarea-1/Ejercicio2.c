@@ -46,6 +46,7 @@ void realizarEncuesta(Persona*, int,char***);
 void llenarEncuesta(Persona*, char***);
 void llenarEncuestaRandom(Persona*, char***);
 void histograma(Persona*, char***);
+void histogramaEdades(Persona*, char***);
 
 void Borrar(Persona*, char***);
 
@@ -53,10 +54,12 @@ void Borrar(Persona*, char***);
 int main ( int argc, char *argv[] ){
 	Persona* pool = (Persona*) malloc (N * sizeof(Persona));
 	char*** pregs = (char***) malloc (M * sizeof(char**));
+	srand((int) time(NULL));
 
 	crearEntorno(pool, pregs);
 	llenarEncuestaRandom(pool, pregs);
 	histograma(pool, pregs);
+	histogramaEdades(pool, pregs);
 
 	Borrar(pool, pregs);
 	return EXIT_SUCCESS;
@@ -130,7 +133,6 @@ void llenarEncuesta(Persona* p, char*** e){
 void llenarEncuestaRandom(Persona* p, char*** e){
 	time_t t;
 	int i, j;
-	srand((unsigned) time(&t));
 
 	for (i = 0; i < N; ++i){
 		for(j = 0; j < M; ++j){
@@ -177,6 +179,11 @@ void histograma(Persona* p, char*** e){
 		printf("\n");
 	}
 	free(conts);
+}
+
+void histogramaEdades(Persona* p, char***e){
+	printf("----Histograma por edades----\n");
+
 }
 
 void Borrar(Persona* p, char*** q){
