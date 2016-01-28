@@ -182,8 +182,36 @@ void histograma(Persona* p, char*** e){
 }
 
 void histogramaEdades(Persona* p, char***e){
+	int * cont = (int*) malloc (5 * sizeof(int));
+	int i, j, k;
 	printf("----Histograma por edades----\n");
+	for (i = 0; i < M; ++i){
+		printf("Pregunta %d\n", i);
+		printf("No [18-25] [26-35] [36-45] [46-65] [66-120]\n");
+		for(j = 1; j < R; ++j){
+			printf("%d  ", j); 
+			for(k = 0; k < N; ++k){
+				if(*((p+k)->respuestas+i) == j){
+					if ((p+k)->edad < 26)
+						*cont = *cont +1;
+					else if((p+k)->edad < 36)
+						*(cont+1) = *(cont+1) +1;
+					else if((p+k)->edad < 46)
+						*(cont+2) = *(cont+2) +1;
+					else if((p+k)->edad < 66)
+						*(cont+3) = *(cont+3) +1;
+					else if((p+k)->edad < 120)
+						*(cont+4) = *(cont+4) +1;
+				}
+			}
+			printf("   %d       %d       %d       %d       %d\n",*cont, *(cont+1), *(cont+2), *(cont+3), *(cont+4));
+			for (k = 0; k < 5; k++){
+				*(cont+k) = 0;
+			}
+		}
+	}
 
+	free (cont);
 }
 
 void Borrar(Persona* p, char*** q){
