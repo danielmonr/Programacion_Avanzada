@@ -153,7 +153,7 @@ void histograma(Persona* p, char*** e){
 	printf("Pregunta  Frecuencia\n");
 	for (i = 0; i < M; i++){
 		for (j = 0; j < N; ++j){
-			cont = (*((p+j)->respuestas+M) == 0) ? cont : cont++;
+			cont = ((*(p+j)->respuestas+M) == 0) ? cont : cont++;
 		}
 		printf("    %d    ", i);
 		for ( j = 0; j < cont; ++j)
@@ -164,7 +164,7 @@ void histograma(Persona* p, char*** e){
 	printf("\n\nFrecuencia de Respuestas\n");
 	for ( i = 0; i < M; ++i){
 		for(j = 0; j < N; ++j){
-			(*(conts+(*((p+j)->respuestas+M))))++;
+			(*(conts+((*(p+j)->respuestas+M))))++;
 		}
 		printf("Pregunta %d\n", i);
 		printf("No  Respuesta Frecuencia\n");
