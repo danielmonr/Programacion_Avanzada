@@ -57,7 +57,13 @@ int main ( int argc, char *argv[] ){
 	srand((int) time(NULL));
 
 	crearEntorno(pool, pregs);
-	llenarEncuestaRandom(pool, pregs);
+	int op;
+	printf("Llenar encuesta manualmente? (0-NO,1-SI)");
+	scanf("%d",&op);
+	if(op)
+		llenarEncuesta(pool,pregs);
+	else
+		llenarEncuestaRandom(pool, pregs);
 	histograma(pool, pregs);
 	histogramaEdades(pool, pregs);
 
