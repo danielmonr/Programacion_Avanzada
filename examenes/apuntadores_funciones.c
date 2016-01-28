@@ -57,24 +57,18 @@ int main ( int argc, char *argv[] ){a
 Iter it_f(Iter a, size_t t, Funcion f, int c){
 	switch (f){
 		case 0:
-			a.a = (a.pos < a.tam) ? a.a + t : a.a;
-			a.pos = (a.pos < a.tam) ? a.pos + 1 : a.pos;
-
+			a.pos = 0;
 			return a;
 			break;
 		case 1:
-			a.a = (a.pos < a.tam) ? a.a + t : a.a;
-			a.pos = (a.pos < a.tam) ? a.pos + 1 : a.pos;
+			a.pos = a.tam -1;
 			return a;
 			break;
 		case 2:
-			a.a = (a.pos < a.tam) ? a.a + t : a.a;
-			a.pos = (a.pos < a.tam) ? a.pos + 1 : a.pos;
+			a.pos = (a.pos < a.tam-1) ? a.pos + 1 : a.pos;
 			return a;
 			break;
 		case 3:
-			a.a = (a.pos < a.tam) ? a.a + t : a.a;
-			a.pos = (a.pos < a.tam) ? a.pos + 1 : a.pos;
 			return a;
 			break;
 		default:
@@ -86,28 +80,21 @@ Iter it_f(Iter a, size_t t, Funcion f, int c){
 Iter it_back(Iter a, size_t t, Funcion f, int c){
 	switch (f){
 		case 0:
-			a.a = (a.pos < a.tam) ? a.a + t : a.a;
-			a.pos = (a.pos < a.tam) ? a.pos + 1 : a.pos;
+			a.pos = a.tam -1;
 			return a;
 			break;
 		case 1:
-			a.a = (a.pos < a.tam) ? a.a + t : a.a;
-			a.pos = (a.pos < a.tam) ? a.pos + 1 : a.pos;
+			a.pos = 0;
 			return a;
 			break;
 		case 2:
-			a.a = (a.pos < a.tam) ? a.a + t : a.a;
-			a.pos = (a.pos < tam) ? a.pos + 1 : a.pos;
+			a.pos = (a.pos > 0) ? a.pos - 1 : a.pos;
 			return a;
 			break;
 		case 3:
-			a.a = (a.pos < a.tam) ? a.a + t : a.a;
-			a.pos = (a.pos < a.tam) ? a.pos + 1 : a.pos;
 			return a;
 			break;
 		default:
-			a.a = (a.pos < a.tam) ? a.a + t : a.a;
-			a.pos = (a.pos < a.tam) ? a.pos + 1 : a.pos;
 			return a;
 			break;
 	}
@@ -116,23 +103,19 @@ Iter it_back(Iter a, size_t t, Funcion f, int c){
 Iter it_bi(Iter a, size_t t, Funcion f, int c){
 	switch (f){
 		case 0:
-			a.a = a.a - (a.pos*a.t);
-			a.pos = (a.pos < a.tam) ? a.pos = 0 : a.pos;
+			a.pos = 0;
 			return a;
 			break;
 		case 1:
-			a.a = (a.pos < a.tam) ? a.a + t : a.a;
-			a.pos = (a.pos < a.tam) ? a.pos + 1 : a.pos;
+			a.pos = a.tam -1;
 			return a;
 			break;
 		case 2:
-			a.a = (a.pos < a.tam) ? a.a + t : a.a;
-			a.pos = (a.pos < a.tam) ? a.pos + 1 : a.pos;
+			a.pos = (a.pos < a.tam-1) ? a.pos + 1 : a.pos;
 			return a;
 			break;
 		case 3:
-			a.a = (a.pos < a.tam) ? a.a + t : a.a;
-			a.pos = (a.pos < a.tam) ? a.pos + 1 : a.pos;
+			a.pos = (a.pos > 0) ? a.pos - 1 : a.pos;
 			return a;
 			break;
 		default:
