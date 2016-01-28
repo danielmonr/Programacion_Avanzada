@@ -56,7 +56,45 @@ void* it_f(void* a, size_t t, Funcion f, int c){
 	}
 }
 
-void * it_
+void * it_back(void* a, size_t t, Funcion f, int c){
+	switch (f){
+		case 0:
+			return (a+(c*t));
+			break;
+		case 1:
+			return a;
+			break;
+		case 2:
+			return (a+(c*t)-t);
+			break;
+		case 3:
+			return (a+(c*t)+t);
+			break;
+		default:
+			return a;
+			break;
+	}
+}
+
+void * it_bi(void* a, size_t t, Funcion f, int c){
+	switch (f){
+		case 0:
+			return (a+(c*t));
+			break;
+		case 1:
+			return a;
+			break;
+		case 2:
+			return (a+(c*t)-t);
+			break;
+		case 3:
+			return (a+(c*t)+t);
+			break;
+		default:
+			return a;
+			break;
+	}
+}
 
 void Recorre(void* a, t_ite, size_t t){
 
