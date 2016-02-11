@@ -33,8 +33,9 @@ int main ( int argc, char *argv[] ){
 	int n = 0;
 
 	char* prog;
-	char * arg[10];
+	char* arg[10] ;
 	int c;
+	int it = it;
 
 	if (argc < 2){
 		printf("Error, numero de argumentos no valido.\n");
@@ -42,34 +43,37 @@ int main ( int argc, char *argv[] ){
 
 	opterr = 0;
 
-	while((c = getopt (argc, argv, "n:p:")) != -1)
+while((c = getopt (argc, argv, "n:p:")) != -1)
 		switch (c){
 			case 'n':
 				n = atoi(optarg);
 				break;
 			case 'p':
 				prog = optarg;
+				arg[0] = (char*)optarg;
 				break;
 			case '?':
-				
-				/* 
-				if (optopt == 'n' || optopt == 'p')
+				if (optopt == 'n' || optopt == 'p'){
 					fprintf(stderr, "Opcion -%c requiere un argumento.\n", optopt);
-				else if(isprint (optopt))
-					fprintf(stderr, "Opcion no valida '-%c'.\n", optopt);
-				else
-					fprintf(stderr, "Opcion desconocida '\\x%x'.\n", optopt);
-				return 1;
-				*/
+					return 1;
+				}
+				else if(isprint (optopt)){
+					char n = (char) optopt;
+					char temp[3] = {'-',optopt, '\0'};
+					arg[++it] = temp;
+				}
+				break;
 			default:
 				abort();
 		}
 
-
+	arg[++it] = NULL;
 	int i = 0;
 	pid_t pid;
 	const char* p = prog;
 
+
+	printf("Correr %s, %d veces.\n", p, n);
 	for (i; i < n; ++i){
 		pid = fork();
 		if (pid < 0){

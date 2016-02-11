@@ -54,6 +54,6 @@ int main ( int argc, char *argv[] ){
 		printf("Termino el proceso: %d\n", pt);
 
 	printf ("termino\n");
-	free pid;
+	free(pid);
 	return EXIT_SUCCESS;
 }				/* ----------  end of function main  ---------- */
