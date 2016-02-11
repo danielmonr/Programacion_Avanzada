@@ -41,14 +41,19 @@ int main ( int argc, char *argv[] ){
 			printf ("Error al crear hijo\n");
 		}
 		else if (*(pid+i) == 0){
-			srand( (int) time (NULL));
+			srand( (int) time (NULL)^(getpid()<<1));
 			int r = rand() %5;
 			printf("Hijo de: %d\tcon PID: %d\tespera: %d\n", getppid(), getpid(), r);
 			sleep(r);
 			return 0;
 		}
 	}
-	wait(NULL);
+
+	pid_t pt;
+	while ((pt = wait(NULL)) > 0)
+		printf("Termino el proceso: %d\n", pt);
+
 	printf ("termino\n");
+	free pid;
 	return EXIT_SUCCESS;
 }				/* ----------  end of function main  ---------- */
