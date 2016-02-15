@@ -33,12 +33,11 @@ int main ( int argc, char *argv[] ){
 	int j = 0;
 	for (j; j <= N; j++){
 		*(ps+j) = (int) malloc (2* sizeof(int));
+		pipe((*(ps+j));
 	}
 	char c;
 
 	pid_t pid;
-
-	pipe(*(ps));
 
 	char testigo = 'T';
 
@@ -51,16 +50,27 @@ int main ( int argc, char *argv[] ){
 			exit(-1);
 		}
 		if (pid == 0){
-			close((*(ps+i)[1]);
-			pipe(p1);
+			int* p = *(ps+i);
+			int* p1 = *(ps+1+i);
+			close(p[1]);
 			close(p1[0]);
 			read(p[0], &c, sizeof(char));
+			printf("Soy el proceso con PID %d y recibi el testigo %c, el cual tendre por 5 segundos\n", getpid(), c);
+			sleep(5);
 			write(p1[1], &c, sizeof(char));
+			printf("Soy el proceso con PID %d y acabo de enviar el testigo %c\n", getpid(), c);
+			exit(1);
 		}
 		else{
-
 		}
 	}
+
+	int * p = *(ps+N);
+	close (p[1]);
+	read(p[0], &c, sizeof(char));
+
+	printf("Soy el proceso con PID %d y recibi el testigo %c, el cual tendre por 5 segundos\n", getpid(), c);
+	sleep(5);
 
 	return EXIT_SUCCESS;
 }				/* ----------  end of function main  ---------- */
