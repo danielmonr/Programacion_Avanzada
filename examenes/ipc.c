@@ -32,8 +32,8 @@ int main ( int argc, char *argv[] ){
 	int** ps = (int**) malloc (N+1* sizeof(int*));
 	int j = 0;
 	for (j; j <= N; j++){
-		*(ps+j) = (int) malloc (2* sizeof(int));
-		pipe((*(ps+j));
+		*(ps+j) = (int*) malloc (2* sizeof(int));
+		pipe((*(ps+j)));
 	}
 	char c;
 
