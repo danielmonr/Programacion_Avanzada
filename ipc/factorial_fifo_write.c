@@ -19,6 +19,7 @@
 
 #include	<stdlib.h>
 #include    <stdio.h>
+#include    <string.h>
 #include    <unistd.h>
 #include    <sys/stat.h>
 #include    <fcntl.h>
@@ -27,27 +28,29 @@
 /* ===  FUNCTION MAIN ===================================================================*/
 int main ( int argc, char *argv[] ){
 	int  err;
-
-	err = mkfifo("home/daniel/Documents/Tec/6°/Programacion_Avanzada/ipc/fifo", 0777);
+	
+	printf("Creando Fifo...\n");
+	err = mkfifo("/home/daniel/Documents/Tec/6°/Programacion_Avanzada/ipc/fifo", 0777);
+	printf("Fifo creado.\n");
 
 	if (err){
 		int errsv = errno;
-		if (errsv == EACCES){
-			printf("no hay acceso\n");
-		}
-		else if(errsv == EEXIST){
-			printf("Existe\n");
-		}
-		else if (errsv == ELOOP){
-			printf("LOOP\n");
-		}
-		printf("Error al crear fifo %d\n", errsv);
+		printf("Error al crear fifo %s\n", strerror(errno));
 		exit(-1);
 
 	}
 
 	int fd;
-	fd = open("~/Documents/Tec/6°/Programacion_Avanzada/ipc/fifo", O_WRONLY);
+	printf("Abriendo archivo...\n");
+	fd = open("/home/daniel/Documents/Tec/6°/Programacion_Avanzada/ipc/fifo", O_WRONLY);
+
+	if (fd>0)
+		printf("hola\n");
+	else{
+		printf("adios\n");
+		exit(-1);
+	}
+
 	int c = -1;
 
 	while( c != 0){
@@ -57,7 +60,7 @@ int main ( int argc, char *argv[] ){
 	}
 
 	close(fd);
-	unlink("~/Documents/Tec/6°/Programacion_Avanzada/ipc/fifo");
+	unlink("/home/daniel/Documents/Tec/6°/Programacion_Avanzada/ipc/fifo");
 
 	return EXIT_SUCCESS;
 }				/* ----------  end of function main  ---------- */

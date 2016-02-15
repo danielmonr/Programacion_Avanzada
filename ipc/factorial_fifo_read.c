@@ -28,20 +28,33 @@
 int main ( int argc, char *argv[] ){
 	int fd;
 
-	fd = open("~/Documents/Tec/6°/Programacion_Avanzada/ipc/fifo", O_RDONLY);
+	fd = open("/home/daniel/Documents/Tec/6°/Programacion_Avanzada/ipc/fifo", O_RDONLY);
 
-	int r, i;
+	if(fd >0)
+		printf("Se abrio %d\n", fd);
+	else{
+		printf("error\n");
+		exit(-1);
+	}
+
+	int r, i, leidos;
 	i = -1;
+	leidos = 1;
 
-	while(i != 0){
-		r = 1;
-		read(fd, &i, sizeof(int));
+	while(leidos= read(fd, &i, sizeof(int))){
+		printf("%d\n", i);
+		 r= 1;
+		if (i == 0)
+			break;
 		int j;
 		for (j = 2; j <= i; j++){
 			r *= j;
 		}
 		printf("Factorial: %d\n", r);
+	
 	}
+
+	close(fd);
 
 	return EXIT_SUCCESS;
 }				/* ----------  end of function main  ---------- */
