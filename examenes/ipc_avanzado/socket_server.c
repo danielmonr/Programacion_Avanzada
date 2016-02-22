@@ -89,14 +89,15 @@ int main(int argc, const char * argv[]) {
                inet_ntoa(direccion.sin_addr),
                ntohs(direccion.sin_port));
         
-        while (leidos = read(cliente, &cont, sizeof(int))) {
+        while (1) {
+			leidos = read(cliente, &cont, sizeof(int));
 			arreglo = (int*) malloc (cont * sizeof(int));
 			leidos = read(cliente, arreglo, cont * sizeof(int));
 			max = min = *(arreglo);
 			prom = 0;
 
 			for(i = 0;i < cont; ++i){
-				printf("n%d = %d\n", i, *(arreglo+i));
+				//printf("n%d = %d\n", i, *(arreglo+i));
 				if (*(arreglo+i) != 0)
 					bool = 1;
 
