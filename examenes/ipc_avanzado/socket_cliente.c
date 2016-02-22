@@ -24,10 +24,22 @@
 #include <arpa/inet.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <time.h>
 
 #define TCP_PORT 8000
 
 int main(int argc, const char * argv[]) {
+
+	srand((int) time(NULL));
+
+	int cont;
+	int bool = 1;
+	int i, j;
+
+	int tiempo;
+
+
+	int* arreglo;
     
     struct sockaddr_in direccion;
     char buffer[1000];
@@ -59,11 +71,33 @@ int main(int argc, const char * argv[]) {
                ntohs(direccion.sin_port));
         
         // Leer de teclado y escribir en socket
-        while (leidos = read(fileno(stdin), &buffer, sizeof(buffer))) {
-            write(cliente, &buffer, leidos);
+		//
+		float start;
+        while (bool) {
+
+			bool = 0;
+
+			tiempo = rand()%2000;
+			start = clock();
+			while (1){
+				if (((clock() - start)/(CLOCKS_PER_SEC/1000)) > tiempo) 
+					break;
+				cont++;
+				arreglo = (int*) realloc (arreglo, cont * sizeof(int));
+				*(arreglo+cont-1) = rand()%10;
+				if(*(arreglo+cont-1) != 0)
+					bool =1;
+
+				usleep(50);
+			}
+
+            write(cliente, &cont, sizeof(int));
+			write(cliente, arreglo, cont * sizeof(int));
+
+			free(arreglo);
             
-            leidos = read(cliente, &buffer, sizeof(buffer));
-            write(fileno(stdout), &buffer, leidos);
+			printf("escribi\n");
+			break;
         }
     }
     

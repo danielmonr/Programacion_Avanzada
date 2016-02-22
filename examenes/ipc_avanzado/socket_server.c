@@ -5,6 +5,7 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 #include <string.h>
+#include <time.h>
 
 #define TCP_PORT 8000
 
@@ -42,6 +43,14 @@ void itoa(int n, char s[])
 
 
 int main(int argc, const char * argv[]) {
+
+	srand((int) time(NULL));
+
+	int * arreglo;
+	int cont = 0;
+	int i;
+	int bool = 0;
+	int max, min, prom;
     
     struct sockaddr_in direccion;
     int buffer = 1;
@@ -80,18 +89,33 @@ int main(int argc, const char * argv[]) {
                inet_ntoa(direccion.sin_addr),
                ntohs(direccion.sin_port));
         
-        // Leer de socket y escribir en pantalla
-        while (leidos = read(cliente, &buffer, sizeof(buffer))) {
-            write(fileno(stdout), &buffer, leidos);
+        while (leidos = read(cliente, &cont, sizeof(int))) {
+			arreglo = (int*) malloc (cont * sizeof(int));
+			leidos = read(cliente, arreglo, cont * sizeof(int));
+			max = min = *(arreglo);
+			prom = 0;
+
+			for(i = 0;i < cont; ++i){
+				printf("n%d = %d\n", i, *(arreglo+i));
+				if (*(arreglo+i) != 0)
+					bool = 1;
+
+				if (max < *(arreglo+i))
+					max = *(arreglo+i);
+				if (min > *(arreglo+i))
+					min = *(arreglo+i);
+
+				prom += *(arreglo+i);
+			}
+
+			printf("El maximo es %d, el minimo es %d, el promedio es %d\n", min, max, prom/cont);
             
-            fact = factorial(buffer);
+            free(arreglo);
+			if (bool == 0)
+				break;
+
+			bool = 0;
             
-            printf("Factorial = %d\n", fact);
-            
-            itoa(fact, buffer);
-            
-           //leidos = write(fileno(stdin), &buffer, sizeof(buffer));
-            write(cliente, &buffer, sizeof(int));
         }
     }
     
@@ -103,12 +127,3 @@ int main(int argc, const char * argv[]) {
     return 0;
 }
 
-int factorial (int num)
-{
-    int f = 1;
-    int i;
-    for(i = 2; i <= num; ++i)
-        f *= i;
-    
-    return f;
-}
