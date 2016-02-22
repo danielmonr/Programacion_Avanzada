@@ -39,7 +39,7 @@ int main(int argc, const char * argv[]) {
 	int tiempo;
 
 
-	int* arreglo;
+	int* arreglo = (int*) malloc (sizeof(int));
     
     struct sockaddr_in direccion;
     char buffer[1000];
@@ -76,6 +76,7 @@ int main(int argc, const char * argv[]) {
         while (bool) {
 
 			bool = 0;
+			cont = 0;
 
 			tiempo = rand()%2000;
 			start = clock();
