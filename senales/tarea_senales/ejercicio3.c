@@ -29,14 +29,17 @@ char* msg;
 
 /* ===  FUNCTION MAIN ===================================================================*/
 int main ( int argc, char *argv[] ){
+	if (argc != 2){
+		printf("Numero de argumentos no valido\n");
+		abort();
+	}
 	signal(SIGINT, SIG_IGN);
 	int num;
 	int* arreglo;
 	msg = malloc(30);
 	strcpy(msg, "Dato");
 	signal(SIGALRM, gestor);
-	printf("Ingrese la cantidad de numeros a ingresar: (4<x<19)\n");
-	scanf("%d", &num);
+	num = atoi(argv[1]);
 	if (num < 5 || num > 9){
 		printf("Error el numero asignado no es valido\n");
 		abort();
