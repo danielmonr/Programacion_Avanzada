@@ -29,6 +29,7 @@ char* msg;
 
 /* ===  FUNCTION MAIN ===================================================================*/
 int main ( int argc, char *argv[] ){
+	signal(SIGINT, SIG_IGN);
 	int num;
 	int* arreglo;
 	msg = malloc(30);
