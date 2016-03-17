@@ -41,6 +41,7 @@ sem_t cuchillos;
 /* ===  FUNCTION MAIN ===================================================================*/
 int main ( int argc, char *argv[] ){
 	sem_init(&sillas, 0, Lugares);
+	sem_init(&cuchillos, 0, Cuchillos);
 	pthread_t fil[N];
 
 	int i = 0;
@@ -59,6 +60,10 @@ void* comer(int info){
 	printf("Filosofo %d esperando cuchillo...\n", info);
 	sem_wait(&cuchillos);
 	printf("Filosofo %d comiendo...\n", info);
+	sleep(rand() % 3+1);
+	sem_post(&cuchillos);
+	sem_post(&sillas);
+	printf("El filosofo %d se levanta de la mesa.\n", info);
 
 	pthread_exit((void *)info);
 }
