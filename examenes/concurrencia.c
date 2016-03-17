@@ -22,15 +22,13 @@
 #include    <unistd.h>
 #include    <pthread.h>
 #include    <time.h>
+#include    <semaphore.h>
 
 #define C_generales 5
 #define C_empresariales 3
 
-sem_t sem_emp[C_empresariales];
-sem_t sem_gen[C_generales];
-
-
 struct empresarial {
+	sem_t sem;
 	int id;
 	int cont;
 	int id_u;
@@ -41,6 +39,7 @@ typedef struct empresarial Empresarial;
 
 
 struct general {
+	sem_t sem;
 	int id;
 	int cont;
 	int id_u;
@@ -58,13 +57,13 @@ int main ( int argc, char *argv[] ){
 	Empresarial cajeros_gen[C_generales];
 
 	for (i; i < C_empresariales; ++i){
-		sem_init(&sem_emp[i], 0, 1);
+		sem_init(&(cajeros_emp[i].sem), 0, 1);
 		cajeros_emp[i].id = i;
 		cajeros_emp[i].cont = 0;
 	}
 
 	for (i = 0; i < C_generales; +i){
-		sem_init(&sem_gen[i], 0, 1);
+		sem_init(&(cajeros_gen[i].sem), 0, 1);
 		cajeros_gen[i].id = i;
 		cajeros_gen[i].cont = 0;
 	}
@@ -77,7 +76,19 @@ int main ( int argc, char *argv[] ){
 	return EXIT_SUCCESS;
 }				/* ----------  end of function main  ---------- */
 
-void* atenderEmpresarial(void* p){
+void* realizarOpEmp(int n){
+	int status = -1;
+	int i = 0;
+	while(status == -1){
+		for (i; i < C_empresariales; ++i){
+			status = sem_trywait(cajeros_emp[i].sem);
+			if (status == 0)
+				atenderEmpresarial(n, i);
+		}
+	}
+}
+
+void* atenderEmpresarial(int n, int p){
 
 
 	Empresarial* e = (Empresarial*)p;
