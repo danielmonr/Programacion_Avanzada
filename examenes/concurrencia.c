@@ -144,6 +144,7 @@ void* atenderEmpresarial(int n, int p){
 		sleep(180);
 		cajeros_emp[p].cont = 0;
 	}
+	sem_post(&(cajeros_emp[p].sem));
 	pthread_exit(NULL);
 }
 
@@ -158,5 +159,6 @@ void* atenderGeneral(int n, int p){
 		cajeros_gen[p].cont = 0;
 	}
 
+	sem_post(&(cajeros_gen[p].sem));
 	pthread_exit(NULL);
 }
