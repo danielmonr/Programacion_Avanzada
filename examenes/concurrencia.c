@@ -50,6 +50,11 @@ typedef struct general General;
 Empresarial cajeros_emp[C_empresariales];
 Empresarial cajeros_gen[C_generales];
 
+void* realizarOpEmp(int);
+void* realizarOpGen(int);
+void* atenderGeneral(int, int);
+void* atenderEmpresarial(int, int);
+
 /* ===  FUNCTION MAIN ===================================================================*/
 int main ( int argc, char *argv[] ){
 	srand((unsigned)time(NULL));
@@ -72,7 +77,7 @@ int main ( int argc, char *argv[] ){
 	pthread_t usuarios_gen[100];
 	pthread_t usuarios_emp[50];
 
-	pthread * aux;
+	pthread_t * aux;
 
 	int indice = 0;
 	for (aux = usuarios_emp; aux < (usuarios_emp + 50); ++aux){
@@ -104,7 +109,7 @@ void* realizarOpEmp(int n){
 	int i = 0;
 	while(status == -1){
 		for (i; i < C_empresariales; ++i){
-			status = sem_trywait(cajeros_emp[i].sem);
+			status = sem_trywait(&(cajeros_emp[i].sem));
 			if (status == 0)
 				atenderEmpresarial(n, i);
 		}
@@ -117,12 +122,12 @@ void* realizarOpGen(int n){
 	while(status == -1){
 		int i = 0;
 		for (i; i < C_generales; ++i){
-			status = sem_trywait(cajeros_gen[i].sem);
+			status = sem_trywait(&(cajeros_gen[i].sem));
 			if (status == 0)
 				atenderGeneral(n,i);
 		}
 		for (i = 0; i < C_empresariales; ++i){
-			status = sem_trywait(cajeros_emp[i].sem);
+			status = sem_trywait(&(cajeros_emp[i].sem));
 			if (status == 0)
 				atenderEmpresarial(n, i);
 		}
@@ -137,7 +142,7 @@ void* atenderEmpresarial(int n, int p){
 
 	if(cajeros_emp[p].cont == 5){
 		sleep(180);
-		cont = 0;
+		cajeros_emp[p].cont = 0;
 	}
 	pthread_exit(NULL);
 }
@@ -150,7 +155,7 @@ void* atenderGeneral(int n, int p){
 
 	if(cajeros_gen[p].cont == 5){
 		sleep(180);
-		cont = 0;
+		cajeros_gen[p].cont = 0;
 	}
 
 	pthread_exit(NULL);
