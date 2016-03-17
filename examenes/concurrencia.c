@@ -47,14 +47,15 @@ struct general {
 
 typedef struct general General;
 
+Empresarial cajeros_emp[C_empresariales];
+Empresarial cajeros_gen[C_generales];
+
 /* ===  FUNCTION MAIN ===================================================================*/
 int main ( int argc, char *argv[] ){
 	srand((unsigned)time(NULL));
 
 	int i = 0;
 
-	Empresarial cajeros_emp[C_empresariales];
-	Empresarial cajeros_gen[C_generales];
 
 	for (i; i < C_empresariales; ++i){
 		sem_init(&(cajeros_emp[i].sem), 0, 1);
@@ -89,20 +90,28 @@ void* realizarOpEmp(int n){
 }
 
 void* atenderEmpresarial(int n, int p){
+	printf("Se esta atendiendo al cliente %d, en el cajero E%d.\n", n, p);
+	cajeros_emp[p].cont += 1;
 
+	sleep((rand() % 120) +180);
 
-	Empresarial* e = (Empresarial*)p;
-	if(e->cont == 5){
+	if(cajeros_emp[p].cont == 5){
 		sleep(180);
+		cont = 0;
 	}
 	pthread_exit(NULL);
 }
 
-void* atenderGeneral(void* p){
-	General* g = (General*)p;
+void* atenderGeneral(int n, int p){
+	printf("Se esta atendiendo al cliente %d, en el cajero G%d.\n", n, p);
+	cajeros_gen[p].cont += 1;
 
-	if(g->cont == 5){
+	sleep((rand() % 120) +180);
+
+	if(cajeros_gen[p].cont == 5){
 		sleep(180);
+		cont = 0;
 	}
+
 	pthread_exit(NULL);
 }
