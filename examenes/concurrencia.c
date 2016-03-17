@@ -63,7 +63,7 @@ int main ( int argc, char *argv[] ){
 		cajeros_emp[i].cont = 0;
 	}
 
-	for (i = 0; i < C_generales; +i){
+	for (i = 0; i < C_generales; ++i){
 		sem_init(&(cajeros_gen[i].sem), 0, 1);
 		cajeros_gen[i].id = i;
 		cajeros_gen[i].cont = 0;
@@ -72,7 +72,29 @@ int main ( int argc, char *argv[] ){
 	pthread_t usuarios_gen[100];
 	pthread_t usuarios_emp[50];
 
+	pthread * aux;
 
+	int indice = 0;
+	for (aux = usuarios_emp; aux < (usuarios_emp + 50); ++aux){
+		pthread_create(aux, NULL, realizarOpEmp, (void*) indice++);
+	}
+	for (aux = usuarios_gen; aux < (usuarios_gen + 100); ++aux){
+		pthread_create(aux, NULL, realizarOpGen, (void*) indice++);
+	}
+
+	for (aux = usuarios_emp; aux < (usuarios_emp +50); ++aux){
+		pthread_join(*aux, NULL);
+	}
+	for(aux = usuarios_gen; aux < (usuarios_gen +100); ++aux){
+		pthread_join(*aux, NULL);
+	}
+
+	for (i =0; i < C_generales; ++i){
+		sem_destroy(&(cajeros_gen[i].sem));
+	}
+	for (i = 0; i< C_empresariales; ++i){
+		sem_destroy(&(cajeros_emp[i].sem));
+	}
 
 	return EXIT_SUCCESS;
 }				/* ----------  end of function main  ---------- */
@@ -82,6 +104,24 @@ void* realizarOpEmp(int n){
 	int i = 0;
 	while(status == -1){
 		for (i; i < C_empresariales; ++i){
+			status = sem_trywait(cajeros_emp[i].sem);
+			if (status == 0)
+				atenderEmpresarial(n, i);
+		}
+	}
+}
+
+
+void* realizarOpGen(int n){
+	int status = -1;
+	while(status == -1){
+		int i = 0;
+		for (i; i < C_generales; ++i){
+			status = sem_trywait(cajeros_gen[i].sem);
+			if (status == 0)
+				atenderGeneral(n,i);
+		}
+		for (i = 0; i < C_empresariales; ++i){
 			status = sem_trywait(cajeros_emp[i].sem);
 			if (status == 0)
 				atenderEmpresarial(n, i);
