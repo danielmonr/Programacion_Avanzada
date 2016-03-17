@@ -20,6 +20,7 @@
 #include    <stdio.h>
 #include    <unistd.h>
 #include    <pthread.h>
+#include    <semaphore.h>
 
 #define Lugares 4
 #define Tenedores 4
@@ -33,7 +34,7 @@ struct filosofos {
 
 typedef struct filosofos Filosofos;
 
-void* comer(void*);
+void* comer(int);
 
 sem_t sillas;
 sem_t cuchillos;
@@ -49,6 +50,12 @@ int main ( int argc, char *argv[] ){
 		printf("Creando al filosofo n%d...\n", i);
 		if(pthread_create(&fil[i], 0, (void*(*)(void*))comer, (void*)i))
 			return -1;
+	}
+
+	pthread_t * aux;
+	for (aux = fil; aux < (fil+N); ++aux){
+		pthread_join(*aux, NULL);
+		
 	}
 
 	return EXIT_SUCCESS;
