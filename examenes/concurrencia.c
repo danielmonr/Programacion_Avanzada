@@ -32,7 +32,6 @@ struct empresarial {
 	int id;
 	int cont;
 	int id_u;
-
 };				/* ----------  end of struct empresarial  ---------- */
 
 typedef struct empresarial Empresarial;
@@ -47,9 +46,21 @@ struct general {
 
 typedef struct general General;
 
+
+struct persona {
+	struct persona* previa;
+	sem_t espera;
+};				/* ----------  end of struct persona  ---------- */
+
+typedef struct persona Persona;
+
 Empresarial cajeros_emp[C_empresariales];
 Empresarial cajeros_gen[C_generales];
+Persona empresarios[50];
+Persona generales[100];
 
+void* filaGeneral(int);
+void* filaEmpresarial(int);
 void* realizarOpEmp(int);
 void* realizarOpGen(int);
 void* atenderGeneral(int, int);
@@ -60,7 +71,6 @@ int main ( int argc, char *argv[] ){
 	srand((unsigned)time(NULL));
 
 	int i = 0;
-
 
 	for (i; i < C_empresariales; ++i){
 		sem_init(&(cajeros_emp[i].sem), 0, 1);
@@ -77,14 +87,30 @@ int main ( int argc, char *argv[] ){
 	pthread_t usuarios_gen[100];
 	pthread_t usuarios_emp[50];
 
+	Persona* temp = NULL;
+	for (i = 0; i < 100; ++i){
+		sem_init(&(generales[i].espera), 0, 0);
+		generales[i].previa = temp;
+		temp = &(generales[i]);
+	}
+
+	temp = NULL;
+	for (i = 0; i < 50; ++i){
+		sem_init(&(empresarios[i].espera), 0, 0);
+		empresarios[i].previa = temp;
+		temp = &(empresarios[i]);
+	}
+
 	pthread_t * aux;
 
 	int indice = 0;
 	for (aux = usuarios_emp; aux < (usuarios_emp + 50); ++aux){
-		pthread_create(aux, NULL, realizarOpEmp, (void*) indice++);
+		pthread_create(aux, NULL, filaEmpresarial, (void*) indice++);
+		sleep((rand()%170) + 50);
 	}
 	for (aux = usuarios_gen; aux < (usuarios_gen + 100); ++aux){
-		pthread_create(aux, NULL, realizarOpGen, (void*) indice++);
+		pthread_create(aux, NULL, filaGeneral, (void*) indice++);
+		sleep((rand()%250)+90);
 	}
 
 	for (aux = usuarios_emp; aux < (usuarios_emp +50); ++aux){
@@ -100,9 +126,32 @@ int main ( int argc, char *argv[] ){
 	for (i = 0; i< C_empresariales; ++i){
 		sem_destroy(&(cajeros_emp[i].sem));
 	}
-
+	for (i = 0; i < 50; ++i){
+		sem_destroy(&(empresarios[i].espera));
+	}
+	for (i = 0;i <100; ++i){
+		sem_destroy(&(generales[i].espera));
+	}
 	return EXIT_SUCCESS;
 }				/* ----------  end of function main  ---------- */
+
+void* filaEmpresarial(int n){
+	if (empresarios[n].previa != NULL){
+		printf("Esperando en la fila, e%d\n", n);
+		sem_wait(&(empresarios[n].previa->espera));
+	}
+	sem_post(&(empresarios[n].espera));
+	return realizarOpEmp(n);
+}
+
+void* filaGeneral(int n){
+	if(generales[n].previa != NULL){
+		printf("Esperando en la fila, g%d\n", n);
+		sem_wait(&(generales[n].previa->espera));
+	}
+	sem_post(&(generales[n].espera));
+	return realizarOpGen(n);
+}
 
 void* realizarOpEmp(int n){
 	int status = -1;
@@ -139,6 +188,7 @@ void* atenderEmpresarial(int n, int p){
 	cajeros_emp[p].cont += 1;
 
 	sleep((rand() % 120) +180);
+	//sleep(5);
 
 	if(cajeros_emp[p].cont == 5){
 		sleep(180);
@@ -153,6 +203,7 @@ void* atenderGeneral(int n, int p){
 	cajeros_gen[p].cont += 1;
 
 	sleep((rand() % 120) +180);
+	//sleep(5);
 
 	if(cajeros_gen[p].cont == 5){
 		sleep(180);
