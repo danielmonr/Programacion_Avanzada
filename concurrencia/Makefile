@@ -1,4 +1,4 @@
-ALL: hilos filosofos
+ALL: hilos filosofos barrera
 .PHONY=clean
 
 hilos:hilos.c
@@ -6,5 +6,8 @@ hilos:hilos.c
 
 filosofos:filosofos.c
 	gcc -g filosofos.c -o filosofos -lpthread
+
+barrera:barreras.c
+	gcc -g barreras.c -o barrera -lpthread
 clean:
-	\rm -f  hilos filosofos
+	\rm -f  hilos filosofos barrera
