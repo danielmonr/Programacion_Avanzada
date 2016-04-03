@@ -123,5 +123,6 @@ int main ( int argc, char *argv[] ){
 	sem_destroy(&sillas);
 	sem_destroy(&ocupadas);
 	free(ens_pt);
+	free(enanitos);
 	return EXIT_SUCCESS;
 }				/* ----------  end of function main  ---------- */
