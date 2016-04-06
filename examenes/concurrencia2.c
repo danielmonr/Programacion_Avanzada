@@ -17,3 +17,101 @@
  */
 
 
+#include	<stdlib.h>
+#include    <unistd.h>
+#include    <semaphore.h>
+#include    <pthread.h>
+#include    <stdio.h>
+
+#define F 3
+#define TF 10
+#define ESPERA 20
+
+
+struct fumador {
+	int id;
+	pthread_mutex_t fumando;
+};				/* ----------  end of struct fumador  ---------- */
+
+typedef struct fumador fumador_t;
+
+pthread_mutex_t tabaco;
+pthread_mutex_t papel;
+pthread_mutex_t fosforos;
+
+fumador_t * f;
+
+void* fumar(void*);
+void* agente(void*);
+
+/* ===  FUNCTION MAIN ===================================================================*/
+int main ( int argc, char *argv[] ){
+	f = (fumador_t*) malloc (F * sizeof(fumador_t));
+	int i;
+	for (i = 0; i < F; ++i){
+		(f+i)->id = i;
+		pthread_mutex_init(&(f+i)->fumando, NULL);
+	}
+	pthread_mutex_init(&tabaco, NULL);
+	pthread_mutex_init(&papel, NULL);
+	pthread_mutex_init(&fosforos, NULL);
+	pthread_mutex_trylock(&tabaco);
+	pthread_mutex_trylock(&papel);
+	pthread_mutex_trylock(&fosforos);
+
+
+	pthread_t * fumadores = (pthread_t*) malloc (F * sizeof (pthread_t));
+	pthread_t ag;
+
+	pthread_create(&ag, NULL, &agente, NULL);
+
+	for (i = 0; i < F; ++i){
+		pthread_create(fumadores+i, NULL, &fumar, (void*)(f+i));
+	}
+
+
+	pthread_join(*fumadores, NULL);
+
+	free(fumadores);
+	return EXIT_SUCCESS;
+}				/* ----------  end of function main  ---------- */
+
+
+void* fumar(void * arg){
+	fumador_t * fu = (fumador_t*) arg;
+	//printf("%d\n", fu->id);
+	while(1){
+		pthread_mutex_lock(&tabaco);
+		pthread_mutex_lock(&papel);
+		pthread_mutex_lock(&fosforos);
+		pthread_mutex_lock(&(fu->fumando));
+		printf("Fuamdor %d esta fumando.\n", fu->id);
+		sleep(10);
+		printf("Fumador %d acabo de fumar.\n", fu->id);
+		pthread_mutex_unlock(&(fu->fumando));
+		sleep(20);
+	}
+
+}
+
+void *agente(void* arg){
+	while(1){
+		int status;
+		status = pthread_mutex_trylock(&(f->fumando));
+		if (status == 0){
+			pthread_mutex_unlock(&(f->fumando));
+			pthread_mutex_unlock(&tabaco);
+		}
+		status = pthread_mutex_trylock(&((f+1)->fumando));
+		if (status == 0){
+			pthread_mutex_unlock(&((f+1)->fumando));
+			pthread_mutex_unlock(&papel);
+		}
+		status = pthread_mutex_trylock(&((f+2)->fumando));
+		if (status == 0){
+			pthread_mutex_unlock(&((f+2)->fumando));
+			pthread_mutex_unlock(&fosforos);
+		}
+		sleep(15);
+	}
+}
