@@ -23,10 +23,8 @@
 #include    <math.h>
 #include    <time.h>
 
-#define N 10000
+#define N 1000
 
-unsigned short matriz[N][N];
-char repre[N][N];
 
 char circularPrimo(unsigned short);
 char primo(unsigned short);
@@ -35,15 +33,55 @@ unsigned short rotar(unsigned short, int);
 /* ===  FUNCTION MAIN ===================================================================*/
 int main ( int argc, char *argv[] ){
 	int i,j;
+	unsigned short matriz[N][N];
+	char repre[N][N];
 	srand((unsigned)time(NULL));
 	// llenar matriz con valores aleatorios del 100 al 10 000
 	 for(i = 0; i < N; ++i){
 		for(j = 0; j <N; ++j){
-			matriz[i][j] = (rand()%9900) + 100;
+			matriz[i][j] = (unsigned short)(rand()%9901) + 100;
 			repre[i][j] = 0;
 		}
 	}
 
+/*
+	 for(i = 0; i < N; ++i){
+		for(j = 0; j <N; ++j){
+			printf("matriz[i][j] = %hu\n", matriz[i][j]);
+		}
+	}*/
+
+
+	 float start = clock();
+
+#pragma omp parallel shared(matriz, repre) private(i,j)
+	 {
+#pragma omp for schedule(auto) nowait
+		 for(i = 0; i< N; ++i){
+			 for(j = 0; j <N ; ++j){
+				 repre[i][j] = circularPrimo(matriz[i][j]);
+			 }
+			 //printf("i= %d\n", i);
+		 }
+	 }
+	 
+
+	 printf("Tiempo en paralelo: %f\n", (clock()-start)/CLOCKS_PER_SEC);
+
+	 for(i = 0; i < N; ++i){
+		for(j = 0; j <N; ++j){
+			repre[i][j] = 0;
+		}
+	 }
+
+	 start = clock();
+	 for (i = 0; i < N; ++i){
+		 for(j = 0; j < N ; ++j){
+			 repre[i][j] = circularPrimo(matriz[i][j]);
+		 }
+	 }
+
+	 printf("Tiempo en serie: %f\n", (clock()-start)/CLOCKS_PER_SEC);
 
 
 	/*if(primo(197)){
@@ -80,7 +118,7 @@ char circularPrimo(unsigned short t){
 		n = 2;
 	}
 	else{
-		printf("ERROR\n");
+		printf("ERROR: %hu\n", t);
 	}
 	for(i = 0; i < n+1; i++){
 		b = b&primo(t);
