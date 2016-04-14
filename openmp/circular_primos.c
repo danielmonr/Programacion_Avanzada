@@ -23,7 +23,7 @@
 #include    <math.h>
 #include    <time.h>
 
-#define N 10000
+#define N 1000
 
 
 char circularPrimo(unsigned short);
@@ -57,6 +57,7 @@ int main ( int argc, char *argv[] ){
 
 
 	 float start = clock();
+	 printf ("Start: %f\n", start);
 
 #pragma omp parallel shared(matriz, repre) private(i,j)
 	 {

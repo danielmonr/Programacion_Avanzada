@@ -1,4 +1,4 @@
-ALL: prueba ejemplo secciones cpr
+ALL: prueba ejemplo secciones cpr avnz
 .PHONY=clean
 CFLAGS= -g -fopenmp 
 
@@ -16,3 +16,6 @@ secciones: secciones.c
 
 cpr: circular_primos.c
 	gcc $(CFLAGS) circular_primos.c -o cpr -lm
+
+avnz: openmp_avanzado.c
+	gcc $(CFLAGS) openmp_avanzado.c -o avnz

@@ -27,12 +27,19 @@
 #define N_UADS 5
 # define T 4
 
+FILE *archivo;
+int m[N_UADS];
+int alrm[N_UADS];
 
-struct uad {
-};				/* ----------  end of struct uad  ---------- */
 
-typedef struct uad uad_t;
+pthread_t central;
+pthread_mutex_t sems[N_UADS*2] = PTHREAD_MUTEX_INITIALIZER;
+pthread_mutex_t file = PTHREAD_MUTEX_INITIALIZER;
 
+void reg(int id);
+void crit(int id);
+void *funcion(void* arg);
+void *central(void *arg);
 /* ===  FUNCTION MAIN ===================================================================*/
 int main ( int argc, char *argv[] ){
 	return EXIT_SUCCESS;
