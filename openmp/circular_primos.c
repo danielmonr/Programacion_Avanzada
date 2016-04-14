@@ -23,7 +23,7 @@
 #include    <math.h>
 #include    <time.h>
 
-#define N 1000
+#define N 10000
 
 
 char circularPrimo(unsigned short);
@@ -33,11 +33,15 @@ unsigned short rotar(unsigned short, int);
 /* ===  FUNCTION MAIN ===================================================================*/
 int main ( int argc, char *argv[] ){
 	int i,j;
-	unsigned short matriz[N][N];
-	char repre[N][N];
+	unsigned short **matriz;
+	matriz = (unsigned short**) malloc (N* sizeof(unsigned short*));
+
+	char **repre = (char**) malloc (N* sizeof(char*));
 	srand((unsigned)time(NULL));
 	// llenar matriz con valores aleatorios del 100 al 10 000
 	 for(i = 0; i < N; ++i){
+		 matriz[i] = (unsigned short*) malloc(N*sizeof(unsigned short));
+		 repre[i] = (char*) malloc (N);
 		for(j = 0; j <N; ++j){
 			matriz[i][j] = (unsigned short)(rand()%9901) + 100;
 			repre[i][j] = 0;
@@ -101,6 +105,8 @@ int main ( int argc, char *argv[] ){
 		printf("No lo es\n");
 	}
 	*/
+	 free(matriz);
+	 free(repre);
 	return EXIT_SUCCESS;
 }				/* ----------  end of function main  ---------- */
 
