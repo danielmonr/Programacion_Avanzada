@@ -31,13 +31,23 @@
 struct args {
 	int ini;
 	int tam;
+	int num;
 };				/* ----------  end of struct args  ---------- */
 
 typedef struct args args_t;
 
+
+struct par {
+	int uno;
+	int dos;
+};				/* ----------  end of struct par  ---------- */
+
+typedef struct par par_t;
+
 char** tablero;
-int** soluciones;
+par_t** soluciones;
 pthread_t* threads;
+int n;
 
 void* resolver(void*);
 void* llenar(int);
@@ -46,7 +56,6 @@ void manejador(int s);
 /* ===  FUNCTION MAIN ===================================================================*/
 int main ( int argc, char *argv[] ){
 	srand(time(NULL));
-	int n;
 	printf("N >> ");
 	scanf("%d", &n);
 	int i, j;
@@ -59,10 +68,16 @@ int main ( int argc, char *argv[] ){
 	args_t ag[NUM_PROC];
 	threads = (pthread_t*) malloc (NUM_PROC*sizeof(pthread_t));
 	signal(SIGUSR1, manejador);
+	soluciones = (par_t**) malloc (NUM_PROC*sizeof(par_t*));
+	for (i = 0; i < NUM_PROC; ++i){
+		*(soluciones+i) = (par_t*) malloc (n*n/NUM_PROC);
+	}
+
 
 	for (i = 0; i < NUM_PROC; ++i){
 		ag[i].tam = sqrt(n*n/NUM_PROC);
 		ag[i].ini = ag[i].tam * i;
+		ag[i].num = i;
 		pthread_create((threads+i), 0, &resolver, (void*)&ag[i]);
 	}
 
@@ -82,15 +97,20 @@ int main ( int argc, char *argv[] ){
 void* resolver(void* arg){
 	args_t* ag = (args_t*)arg;
 	int i, j;
-	for (i = ag->ini; i < ag->ini + ag->tam; ++i){
-		for(j = ag->ini; j < ag->ini + ag->tam; ++j){
-			
-		}
-	}
+	*(*(tablero+ag->ini)+ag->ini) = 0;
+	*(*(tablero+ag->ini+ag->tam-1)+ag->ini+ag->tam-1) = 0;
+
 }
 
 void manejador(int s){
-
+	int i, j;
+	for (i = 0; i < NUM_PROC; ++i){
+		printf("Procesador %d:\n", i);
+		for (j = 0; j < (n*n/NUM_PROC); ++j){
+			printf("(%d,%d),", (*(soluciones+i)+j)->uno, (*(soluciones+i)+j)->dos);
+		}
+		printf("\n");
+	}
 }
 
 void* llenar(int n){
