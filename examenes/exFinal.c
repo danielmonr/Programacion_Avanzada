@@ -74,16 +74,24 @@ int main ( int argc, char *argv[] ){
 	}
 
 
-	for (i = 0; i < NUM_PROC; ++i){
+	for (i = 0; i < sqrt(NUM_PROC); ++i){
 		ag[i].tam = sqrt(n*n/NUM_PROC);
 		ag[i].ini = ag[i].tam * i;
-		ag[i].num = i;
-		pthread_create((threads+i), 0, &resolver, (void*)&ag[i]);
+		pthread_create((threads+i), 0, &resolver, &ag[i]);
 	}
 
 	for ( i = 0; i < NUM_PROC; ++i){
 		pthread_join(*(threads+i), NULL);
 	}
+	
+
+	printf("Solucion:\n");
+	for (i = 0; i < NUM_PROC; ++i){
+		for(j = 0; j < n*n/NUM_PROC; ++j){
+			printf("(%d,%d)", ((*(soluciones+i))+j)->uno, ((*(soluciones+i))+j)->dos);
+		}
+	}
+	printf("\n");
 
 
 	for ( i = 0; i < n; ++i)
@@ -96,10 +104,29 @@ int main ( int argc, char *argv[] ){
 
 void* resolver(void* arg){
 	args_t* ag = (args_t*)arg;
+	printf("%d\n", ag->ini);
 	int i, j;
-	*(*(tablero+ag->ini)+ag->ini) = 0;
+	int cont = 1;
+	*((*(tablero + ag->ini))+ag->ini) = 0;
 	*(*(tablero+ag->ini+ag->tam-1)+ag->ini+ag->tam-1) = 0;
-
+	(*(soluciones+ag->num))->uno = ag->ini;
+	(*(soluciones+ag->num))->dos = ag->ini;
+	for(i = ag->ini+1; i < ag->tam; ++i){
+		if (!(*((*(tablero+i))+i))){
+			((*(soluciones+ag->num))+cont)->uno = i;
+			((*(soluciones+ag->num))+cont)->dos = i;
+		}
+		else{
+			for (j = i+1; j < ag->tam; ++j){
+				if(!(*((*(tablero+i))+j)) && !(*((*(tablero+i+1))+j))){
+					((*(soluciones+ag->num))+cont)->uno = j;
+					((*(soluciones+ag->num))+cont)->dos = i;
+					((*(soluciones+ag->num))+cont)->uno = j;
+					((*(soluciones+ag->num))+cont)->dos = i+1;
+				}
+			}
+		}
+	}
 }
 
 void manejador(int s){
