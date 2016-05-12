@@ -88,7 +88,8 @@ int main ( int argc, char *argv[] ){
 	printf("Solucion:\n");
 	for (i = 0; i < NUM_PROC; ++i){
 		for(j = 0; j < n*n/NUM_PROC; ++j){
-			printf("(%d,%d)", ((*(soluciones+i))+j)->uno, ((*(soluciones+i))+j)->dos);
+			if(((*(soluciones+i))+j)->uno && ((*(soluciones+i))+j)->dos)
+				printf("(%d,%d)", ((*(soluciones+i))+j)->uno, ((*(soluciones+i))+j)->dos);
 		}
 	}
 	printf("\n");
