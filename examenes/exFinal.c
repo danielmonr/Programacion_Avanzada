@@ -22,6 +22,8 @@
 #include    <pthread.h>
 #include    <time.h>
 #include    <math.h>
+#include    <unistd.h>
+#include    <signal.h>
 
 #define NUM_PROC 4
 
@@ -34,10 +36,12 @@ struct args {
 typedef struct args args_t;
 
 char** tablero;
+int** soluciones;
 pthread_t* threads;
 
 void* resolver(void*);
 void* llenar(int);
+void manejador(int s);
 
 /* ===  FUNCTION MAIN ===================================================================*/
 int main ( int argc, char *argv[] ){
@@ -54,6 +58,7 @@ int main ( int argc, char *argv[] ){
 
 	args_t ag[NUM_PROC];
 	threads = (pthread_t*) malloc (NUM_PROC*sizeof(pthread_t));
+	signal(SIGUSR1, manejador);
 
 	for (i = 0; i < NUM_PROC; ++i){
 		ag[i].tam = sqrt(n*n/NUM_PROC);
@@ -82,6 +87,10 @@ void* resolver(void* arg){
 			
 		}
 	}
+}
+
+void manejador(int s){
+
 }
 
 void* llenar(int n){
